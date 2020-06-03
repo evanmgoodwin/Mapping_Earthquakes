@@ -18,38 +18,21 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 // Create a base layer that holds both maps
 let baseMaps = {
 	"Streets": streets,
-	"Satellite Streets": satelliteStreets
+	"Satellite": satelliteStreets
 };
 
 // Create the map object with center, zoom level and default layer
 let map = L.map("mapid", {
-	center: [43.7, -79.3],
-	zoom: 11,
+	center: [39.5, -98.5],
+	zoom: 3,
 	layers: [streets]
 });
 
 // Pass our map layers into our layers control and add the layers control to the map
 L.control.layers(baseMaps).addTo(map);
 
-// Accessing the Toronto neighborhoods GeoJSON url
-let torontoHoods = "https://raw.githubusercontent.com/evanmgoodwin/Mapping_Earthquakes/master/torontoNeighborhoods.json";
-
-// Create a style for the polygons
-let myStyle = {
-	color: "blue",
-	fillColor: "yellow",
-	weight: 1
-};
-
-
-// Grabbing GeoJSON data
-d3.json(torontoHoods).then(function(data) {
-	console.log(data);
+// Retrieve the earthquake GeoJSON data
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson").then(function(data) {
 	// Creating a GeoJSON layer with the retrieved data
-	L.geoJSON(data, {
-		style: myStyle,
-		onEachFeature: function(feature, layer) {
-			layer.bindPopup("<h3>Neighborhood: " + feature.properties.AREA_NAME + "</h3>");
-		}
-	}).addTo(map);
+	L.geoJson(data).addTo(map);
 });
